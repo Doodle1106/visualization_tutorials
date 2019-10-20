@@ -30,6 +30,10 @@
 #define PLANT_FLAG_TOOL_H
 
 #include <rviz/tool.h>
+#include <iostream>
+
+#include <ros/ros.h>
+#include <geometry_msgs/PoseStamped.h>
 
 namespace Ogre
 {
@@ -75,6 +79,9 @@ private:
   Ogre::SceneNode* moving_flag_node_;
   std::string flag_resource_;
   rviz::VectorProperty* current_flag_property_;
+
+  ros::NodeHandle mNH;
+  ros::Publisher mFlagPub;
 };
 // END_TUTORIAL
 

@@ -58,6 +58,8 @@ PlantFlagTool::PlantFlagTool()
   , current_flag_property_( NULL )
 {
   shortcut_key_ = 'l';
+
+  mFlagPub = mNH.advertise<geometry_msgs::PoseStamped>("gi/flag_pub/pose", 10);
 }
 
 // The destructor destroys the Ogre scene nodes for the flags so they
@@ -180,6 +182,17 @@ int PlantFlagTool::processMouseEvent( rviz::ViewportMouseEvent& event )
     if( event.leftDown() )
     {
       makeFlag( intersection );
+
+      std::cout<<"Flag point: "<<intersection.x<<", "<<intersection.y<<", "<<intersection.z<<std::endl;
+      geometry_msgs::PoseStamped flag_pose;
+      flag_pose.header.frame_id = "map";
+      flag_pose.header.stamp = ros::Time::now();
+      flag_pose.pose.position.x = intersection.x;
+      flag_pose.pose.position.y = intersection.y;
+      flag_pose.pose.position.z = intersection.z;
+
+      mFlagPub.publish(flag_pose);
+
       current_flag_property_ = NULL; // Drop the reference so that deactivate() won't remove it.
       return Render | Finished;
     }
